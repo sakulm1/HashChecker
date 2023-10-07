@@ -30,7 +30,14 @@ class hashCreator:
 
     def stop(self):
         self.isGenerating = False
-    
+
+    def calcTrys(self):
+        total_combinations = 1
+        for length in range(1, self.password_length + 1):
+            total_combinations += len(self.characters) ** length
+
+        return total_combinations
+
     def kombinationen(self, length):
         for combination in itertools.product(self.characters, repeat=length):
             password = ''.join(combination)
@@ -39,22 +46,24 @@ class hashCreator:
                 o = f"Found Password {password}, Hash -> {password_sha1}"
                 app.foundPasswords.insert(self.countFound, f"Password {password} -> {password_sha1}")
             print(f"{password} -> {password_sha1}")
+            app.addOutput(f"{password} -> {password_sha1}")
             if not self.isGenerating: return
 
 
 class App(tk.Tk):
     generator = hashCreator(hashes, characters, max_password_length)
     countHashes = 0
+    countTrys = 0
     def __init__(self):
         super().__init__()
         
         self.title = tk.Label(text="Hash Checker")
         self.title.grid(row=0, column=0, sticky="ew")
 
-        self.btnStart = tk.Button(self, text="Start", command=self.generator.start)
+        self.btnStart = tk.Button(self, text="Start",foreground="green", command=self.generator.start)
         self.btnStart.grid(row=1, column=0, sticky="ew")
 
-        self.btnStop = tk.Button(self, text="Stop", command=self.generator.stop)
+        self.btnStop = tk.Button(self, text="Stop", foreground="red", command=self.generator.stop,)
         self.btnStop.grid(row=1, column=1, sticky="ew")
 
         self.btnClear = tk.Button(self, text="Clear", command=self.clearList)
@@ -63,11 +72,11 @@ class App(tk.Tk):
         self.foundPasswords = tk.Listbox(self)
         self.foundPasswords.grid(row=2, column=0, columnspan=3, sticky="ew")
 
-        self.passwordLable = tk.Label(self, text="Max Length: ")
-        self.passwordLable.grid(row=3, column=0, sticky="ew")
+        self.passwordLabel = tk.Label(self, text="Max Length: ")
+        self.passwordLabel.grid(row=3, column=0, sticky="ew")
         self.passwordLength = tk.Entry(self)
         self.passwordLength.grid(row=3, column=1, sticky="ew")
-        self.safeLen = tk.Button(self, text="ok", command=self.saveLen)
+        self.safeLen = tk.Button(self, text="Ok", command=self.saveLen)
         self.safeLen.grid(row=3, column=2, sticky="ew")
 
         self.checkHashesLable = tk.Label(self, text="Hashes to check:")
@@ -76,17 +85,32 @@ class App(tk.Tk):
         self.checkHashesEntry.grid(row=4, column=1, sticky="ew")
         self.checkHashesBtn = tk.Button(self, text="Add", command=self.addCheckHash)
         self.checkHashesBtn.grid(row=4, column=2, sticky="ew")
-        self.checkHashesList = tk.Listbox(self)
-        self.checkHashesList.grid(row=5, column=0, columnspan=3, sticky="ew")
 
-        self.statusBar = tk.Frame(self, bg="green", height=20, width=self.winfo_width())
-        self.statusBar.grid(row=6, column=0, columnspan=3, sticky="w")
+        self.separator1 = tk.Frame(self, height=3, bg="gray")
+        self.separator1.grid(row=5, column=0, columnspan=3, sticky="ew")
+        self.titleCheckHash = tk.Label(self, text="Looking for these hashes:")
+        self.titleCheckHash.grid(row=6, column=0, columnspan=3, sticky="ew")
+
+        self.checkHashesList = tk.Listbox(self)
+        self.checkHashesList.grid(row=7, column=0, columnspan=3, sticky="ew")
+
+        self.separator2 = tk.Frame(self, height=3, bg="gray")
+        self.separator2.grid(row=8, column=0, columnspan=3, sticky="ew")
+        self.titleOutput = tk.Label(self, text="Output:")
+        self.titleOutput.grid(row=9, column=0, columnspan=3, sticky="ew")
+        self.output = tk.Listbox(self)
+        self.output.grid(row=10, column=0, columnspan=3, sticky="ew")
+        #self.labelProgress = tk.Label(self, text='[number] of [progress] ', fg='red')
+        #self.labelProgress.grid(row=6, column=0, columnspan=3, sticky="ew")
+
+
 
     def saveLen(self):
         try:
             value = int(self.passwordLength.get())
             self.generator.password_length = int(value)
-            print(self.generator.password_length)
+            maxCombination = self.generator.calcTrys()
+            print(maxCombination)
         except ValueError:
             print("not a valid integer 😔")
 
@@ -109,7 +133,13 @@ class App(tk.Tk):
     def clearList(self):
         self.foundPasswords.delete(0, 'end')
         self.checkHashesList.delete(0, 'end')
+        self.output.delete(0, 'end')
         self.generator.hashes.clear()
+        self.countHashes = 0
+        self.countTrys = 0
+
+    def addOutput(self, text):
+        self.output.insert(self.countTrys, text)
         
 
 if __name__ == "__main__":
