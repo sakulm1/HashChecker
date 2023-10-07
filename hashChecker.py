@@ -47,7 +47,7 @@ class App(tk.Tk):
     countHashes = 0
     def __init__(self):
         super().__init__()
-    
+        
         self.title = tk.Label(text="Hash Checker")
         self.title.grid(row=0, column=0, sticky="ew")
 
@@ -79,6 +79,9 @@ class App(tk.Tk):
         self.checkHashesList = tk.Listbox(self)
         self.checkHashesList.grid(row=5, column=0, columnspan=3, sticky="ew")
 
+        self.statusBar = tk.Frame(self, bg="green", height=20, width=self.winfo_width())
+        self.statusBar.grid(row=6, column=0, columnspan=3, sticky="w")
+
     def saveLen(self):
         try:
             value = int(self.passwordLength.get())
@@ -104,7 +107,9 @@ class App(tk.Tk):
         self.countHashes += 1
     
     def clearList(self):
-        self.foundPasswords.delete(0)
+        self.foundPasswords.delete(0, 'end')
+        self.checkHashesList.delete(0, 'end')
+        self.generator.hashes.clear()
         
 
 if __name__ == "__main__":
