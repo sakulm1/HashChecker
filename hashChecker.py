@@ -4,7 +4,7 @@ import tkinter as tk
 import threading
 test = "4dcc4173d80a2817206e196a38f0dbf7850188f, 44d5369032336a51fe00c7ad691c6d370cd91c90, df44a1c6f830f3230610f6812231585f7b883859, a3a882f4860f09e8f8b526ba15a161951ef7a00f, 1a359101fcc11d2d3864d2d423d8e6dd1c6d82ca, 74375d47cac9acd5a22df9625773d5e071453e8e, 765750e41995b3b0b79d491b39dd5c04db97cb73"
 hashes = []
-characters = " abcdefghijklmnopqrstuvwxyz"
+characters = " "
 #characters = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!§$%&/()=?äöüß+-#*~,.;:<>|{}[]"
 max_password_length = 1
 
@@ -56,7 +56,7 @@ class App(tk.Tk):
     countTrys = 0
     def __init__(self):
         super().__init__()
-        
+
         self.title = tk.Label(text="Hash Checker")
         self.title.grid(row=0, column=0, sticky="ew")
 
@@ -100,10 +100,24 @@ class App(tk.Tk):
         self.titleOutput.grid(row=9, column=0, columnspan=3, sticky="ew")
         self.output = tk.Listbox(self)
         self.output.grid(row=10, column=0, columnspan=3, sticky="ew")
-        #self.labelProgress = tk.Label(self, text='[number] of [progress] ', fg='red')
-        #self.labelProgress.grid(row=6, column=0, columnspan=3, sticky="ew")
 
+        self.charactersLabel = tk.Label(self, text="Characters: ")
+        self.charactersLabel.grid(row=11, column=0, sticky="ew")
+        self.charactersEntry = tk.Entry(self)
+        self.charactersEntry.grid(row=11, column=1, sticky="ew")
+        self.charactersButton = tk.Button(self, text="OK", command=self.saveCharacters)
+        self.charactersButton.grid(row=11, column=2, sticky="ew")
 
+        self.setCharacters()
+
+    def saveCharacters(self):
+        text = self.charactersEntry.get()
+        self.generator.characters = text
+
+    def setCharacters(self):
+        characters = " abcdefghijklmnopqrstuvwxyz"
+        self.charactersEntry.insert(0, characters)
+        self.generator.characters = characters
 
     def saveLen(self):
         try:
