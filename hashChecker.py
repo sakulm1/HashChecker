@@ -4,7 +4,7 @@ import tkinter as tk
 import threading
 test = "4dcc4173d80a2817206e196a38f0dbf7850188f, 44d5369032336a51fe00c7ad691c6d370cd91c90, df44a1c6f830f3230610f6812231585f7b883859, a3a882f4860f09e8f8b526ba15a161951ef7a00f, 1a359101fcc11d2d3864d2d423d8e6dd1c6d82ca, 74375d47cac9acd5a22df9625773d5e071453e8e, 765750e41995b3b0b79d491b39dd5c04db97cb73"
 hashes = []
-characters = ""
+characters = " "
 #characters = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!§$%&/()=?äöüß+-#*~,.;:<>|{}[]"
 max_password_length = 1
 
