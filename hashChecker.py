@@ -8,7 +8,7 @@ characters = " "
 #characters = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!§$%&/()=?äöüß+-#*~,.;:<>|{}[]"
 max_password_length = 1
 
-class hashCreator:
+class HashChecker:
     isGenerating = False
     countFound = 0
     def __init__(self, hashes, characters, password_length) -> None:
@@ -44,14 +44,14 @@ class hashCreator:
             password_sha1 = self.__sha1hex(password)
             if password_sha1 in self.hashes:
                 o = f"Found Password {password}, Hash -> {password_sha1}"
-                app.foundPasswords.insert(self.countFound, f"Password {password} -> {password_sha1}")
+                hashChecker.foundPasswords.insert(self.countFound, f"Password {password} -> {password_sha1}")
             print(f"{password} -> {password_sha1}")
-            app.addOutput(f"{password} -> {password_sha1}")
+            hashChecker.addOutput(f"{password} -> {password_sha1}")
             if not self.isGenerating: return
 
 
-class App(tk.Tk):
-    generator = hashCreator(hashes, characters, max_password_length)
+class hashChecker(tk.Tk):
+    generator = HashChecker(hashes, characters, max_password_length)
     countHashes = 0
     countTrys = 0
     def __init__(self):
@@ -156,9 +156,9 @@ class App(tk.Tk):
         self.output.insert(self.countTrys, text)
         
 
-if __name__ == "__main__":
-    app = App()
-    app.mainloop()
+# if __name__ == "__main__":
+#     app = App()
+#     app.mainloop()
 
 
 
