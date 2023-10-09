@@ -8,7 +8,7 @@ characters = " "
 #characters = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!§$%&/()=?äöüß+-#*~,.;:<>|{}[]"
 max_password_length = 1
 
-class hashCreator:
+class HashChecker:
     isGenerating = False
     countFound = 0
     def __init__(self, hashes, characters, password_length) -> None:
@@ -44,71 +44,78 @@ class hashCreator:
             password_sha1 = self.__sha1hex(password)
             if password_sha1 in self.hashes:
                 o = f"Found Password {password}, Hash -> {password_sha1}"
-                app.foundPasswords.insert(self.countFound, f"Password {password} -> {password_sha1}")
+                HashWindow.foundPasswords.insert(self.countFound, f"Password {password} -> {password_sha1}")
             print(f"{password} -> {password_sha1}")
-            app.addOutput(f"{password} -> {password_sha1}")
+            HashWindow.addOutput(f"{password} -> {password_sha1}")
             if not self.isGenerating: return
 
 
-class App(tk.Tk):
-    generator = hashCreator(hashes, characters, max_password_length)
+class HashWindow(tk.Frame):
+    generator = HashChecker(hashes, characters, max_password_length)
     countHashes = 0
     countTrys = 0
     def __init__(self):
-        super().__init__()
+        #super().__init__()
 
-        self.title = tk.Label(text="Hash Checker")
+        self.rFrame = tk.Frame()
+
+        self.title = tk.Label(self.rFrame, text="Hash Checker")
         self.title.grid(row=0, column=0, sticky="ew")
 
-        self.btnStart = tk.Button(self, text="Start",foreground="green", command=self.generator.start)
+        self.btnStart = tk.Button(self.rFrame, text="Start",foreground="green", command=self.generator.start)
         self.btnStart.grid(row=1, column=0, sticky="ew")
 
-        self.btnStop = tk.Button(self, text="Stop", foreground="red", command=self.generator.stop,)
+        self.btnStop = tk.Button(self.rFrame, text="Stop", foreground="red", command=self.generator.stop,)
         self.btnStop.grid(row=1, column=1, sticky="ew")
 
-        self.btnClear = tk.Button(self, text="Clear", command=self.clearList)
+        self.btnClear = tk.Button(self.rFrame, text="Clear", command=self.clearList)
         self.btnClear.grid(row=1, column=2, sticky="ew")
 
-        self.foundPasswords = tk.Listbox(self)
+        self.foundPasswords = tk.Listbox(self.rFrame)
         self.foundPasswords.grid(row=2, column=0, columnspan=3, sticky="ew")
 
-        self.passwordLabel = tk.Label(self, text="Max Length: ")
+        self.passwordLabel = tk.Label(self.rFrame, text="Max Length: ")
         self.passwordLabel.grid(row=3, column=0, sticky="ew")
-        self.passwordLength = tk.Entry(self)
+        self.passwordLength = tk.Entry(self.rFrame)
         self.passwordLength.grid(row=3, column=1, sticky="ew")
-        self.safeLen = tk.Button(self, text="Ok", command=self.saveLen)
+        self.safeLen = tk.Button(self.rFrame, text="Ok", command=self.saveLen)
         self.safeLen.grid(row=3, column=2, sticky="ew")
 
-        self.checkHashesLable = tk.Label(self, text="Hashes to check:")
+        self.checkHashesLable = tk.Label(self.rFrame, text="Hashes to check:")
         self.checkHashesLable.grid(row=4, column=0, sticky="ew")
-        self.checkHashesEntry = tk.Entry(self)
+        self.checkHashesEntry = tk.Entry(self.rFrame)
         self.checkHashesEntry.grid(row=4, column=1, sticky="ew")
-        self.checkHashesBtn = tk.Button(self, text="Add", command=self.addCheckHash)
+        self.checkHashesBtn = tk.Button(self.rFrame, text="Add", command=self.addCheckHash)
         self.checkHashesBtn.grid(row=4, column=2, sticky="ew")
 
-        self.separator1 = tk.Frame(self, height=3, bg="gray")
+        self.separator1 = tk.Frame(self.rFrame, height=3, bg="gray")
         self.separator1.grid(row=5, column=0, columnspan=3, sticky="ew")
-        self.titleCheckHash = tk.Label(self, text="Looking for these hashes:")
+        self.titleCheckHash = tk.Label(self.rFrame, text="Looking for these hashes:")
         self.titleCheckHash.grid(row=6, column=0, columnspan=3, sticky="ew")
 
-        self.checkHashesList = tk.Listbox(self)
+        self.checkHashesList = tk.Listbox(self.rFrame)
         self.checkHashesList.grid(row=7, column=0, columnspan=3, sticky="ew")
 
-        self.separator2 = tk.Frame(self, height=3, bg="gray")
+        self.separator2 = tk.Frame(self.rFrame, height=3, bg="gray")
         self.separator2.grid(row=8, column=0, columnspan=3, sticky="ew")
-        self.titleOutput = tk.Label(self, text="Output:")
+        self.titleOutput = tk.Label(self.rFrame, text="Output:")
         self.titleOutput.grid(row=9, column=0, columnspan=3, sticky="ew")
-        self.output = tk.Listbox(self)
+        self.output = tk.Listbox(self.rFrame)
         self.output.grid(row=10, column=0, columnspan=3, sticky="ew")
 
-        self.charactersLabel = tk.Label(self, text="Characters: ")
+        self.charactersLabel = tk.Label(self.rFrame, text="Characters: ")
         self.charactersLabel.grid(row=11, column=0, sticky="ew")
-        self.charactersEntry = tk.Entry(self)
+        self.charactersEntry = tk.Entry(self.rFrame)
         self.charactersEntry.grid(row=11, column=1, sticky="ew")
-        self.charactersButton = tk.Button(self, text="OK", command=self.saveCharacters)
+        self.charactersButton = tk.Button(self.rFrame, text="OK", command=self.saveCharacters)
         self.charactersButton.grid(row=11, column=2, sticky="ew")
 
         self.setCharacters()
+        
+
+    
+    def show(self):
+        return self.rFrame
 
     def saveCharacters(self):
         text = self.charactersEntry.get()
@@ -156,9 +163,9 @@ class App(tk.Tk):
         self.output.insert(self.countTrys, text)
         
 
-if __name__ == "__main__":
-    app = App()
-    app.mainloop()
+# if __name__ == "__main__":
+#     app = App()
+#     app.mainloop()
 
 
 
