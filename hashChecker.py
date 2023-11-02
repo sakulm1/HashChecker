@@ -11,10 +11,11 @@ max_password_length = 1
 class HashChecker:
     isGenerating = False
     countFound = 0
-    def __init__(self, hashes, characters, password_length) -> None:
+    def __init__(self, hashes, characters, password_length, hash_window) -> None:
         self.hashes = hashes
         self.characters = characters
         self.password_length = password_length
+        self.hash_window = hash_window
 
     def __sha1hex(self, sha1in: str):
         return hashlib.sha1(sha1in.encode('utf-8')).hexdigest()
@@ -43,21 +44,21 @@ class HashChecker:
             password = ''.join(combination)
             password_sha1 = self.__sha1hex(password)
             if password_sha1 in self.hashes:
-                o = f"Found Password {password}, Hash -> {password_sha1}"
-                HashWindow.foundPasswords.insert(self.countFound, f"Password {password} -> {password_sha1}")
+                self.hash_window.foundPasswords.insert(self.countFound, f"Password {password} -> {password_sha1}")
             print(f"{password} -> {password_sha1}")
-            HashWindow.addOutput(f"{password} -> {password_sha1}")
+            self.hash_window.addOutput(f"{password} -> {password_sha1}")  # Verwenden Sie self.hash_window
             if not self.isGenerating: return
 
 
 class HashWindow(tk.Frame):
-    generator = HashChecker(hashes, characters, max_password_length)
+    #generator = HashChecker(hashes, characters, max_password_length, self)
     countHashes = 0
     countTrys = 0
     def __init__(self):
         #super().__init__()
+        self.generator = HashChecker(hashes, characters, max_password_length, self) 
 
-        self.rFrame = tk.Frame()
+        self.rFrame = tk.Frame() #return Frame
 
         self.title = tk.Label(self.rFrame, text="Hash Checker")
         self.title.grid(row=0, column=0, sticky="ew")
@@ -111,8 +112,6 @@ class HashWindow(tk.Frame):
         self.charactersButton.grid(row=11, column=2, sticky="ew")
 
         self.setCharacters()
-        
-
     
     def show(self):
         return self.rFrame
@@ -163,9 +162,6 @@ class HashWindow(tk.Frame):
         self.output.insert(self.countTrys, text)
         
 
-# if __name__ == "__main__":
-#     app = App()
-#     app.mainloop()
 
 
 
