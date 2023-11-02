@@ -43,10 +43,9 @@ class HashChecker:
             password = ''.join(combination)
             password_sha1 = self.__sha1hex(password)
             if password_sha1 in self.hashes:
-                o = f"Found Password {password}, Hash -> {password_sha1}"
                 HashWindow.foundPasswords.insert(self.countFound, f"Password {password} -> {password_sha1}")
             print(f"{password} -> {password_sha1}")
-            HashWindow.addOutput(f"{password} -> {password_sha1}")
+            HashWindow.addOutput(self, f"{password} -> {password_sha1}")
             if not self.isGenerating: return
 
 
@@ -161,6 +160,7 @@ class HashWindow(tk.Frame):
 
     def addOutput(self, text):
         self.output.insert(self.countTrys, text)
+
         
 
 # if __name__ == "__main__":
