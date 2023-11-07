@@ -45,7 +45,7 @@ class HashChecker:
             password_sha1 = self.__sha1hex(password)
             if password_sha1 in self.hashes:
                 self.hash_window.foundPasswords.insert(self.countFound, f"Password {password} -> {password_sha1}")
-            print(f"{password} -> {password_sha1}")
+            #print(f"{password} -> {password_sha1}")
             self.hash_window.addOutput(f"{password} -> {password_sha1}")  # Verwenden Sie self.hash_window
             if not self.isGenerating: return
 
