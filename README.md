@@ -1,5 +1,7 @@
 # SHA-1 Hash Cracker with GUI
 
+This readme was generated with chatgpt (what a fucking disgrace)
+
 ## Overview
 
 This Python tool provides a graphical user interface (GUI) to perform brute-force attacks on SHA-1 hashes. It's designed to generate all possible combinations of a predefined character set to find the original input of a given SHA-1 hash. This project was developed as a potential solution for a university assignment, focusing on understanding the vulnerabilities and weaknesses of unsalted SHA-1 hashed passwords.
